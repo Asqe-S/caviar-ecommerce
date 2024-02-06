@@ -1,0 +1,94 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel=" icon" href="https://caviar.global/favicon.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{%block title%}Caviar Admin {%endblock%}</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <link rel="stylesheet" href="{% static 'css.css' %}" />
+  </head>
+  <body class="bg">
+    <div class="m-2 ">
+      {% block body%}
+
+    <div class="row mt-5 justify-content-center mx-1">
+      <div class="col-11 col-sm-9 col-md-7 col-lg-5 col-xl-4 box_shadow p-2">
+        <div class="mb-3 text-center ">
+            <h3>caviar</h3>
+          </div>
+        
+        <div class="error"></div>
+        <form method="post" id="signinForm">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="username">Username or Email</label>
+            <input
+              name="username"
+              type="text"
+              id="username"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="password">Password</label>
+            <input
+              name="password"
+              type="password"
+              id="password"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Sign Up" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {%endblock%}
+    </div>
+
+    <script src="{% static 'main.js' %}"></script>
+    <script src="{% static 'jquery.js' %}"></script>
+    {%block script%} 
+    
+    <script>
+        $(document).ready(function () {
+          $("#signinForm").on("submit", function (event) {
+            event.preventDefault();
+      
+            var username = $("#username").val();
+            var password = $("#password").val();
+      
+            $.ajax({
+              type: "POST",
+              url: '{% url "adminlogin" %}', // Replace with your URL for form validation
+              data: {
+                username: username,
+                password: password,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+              },
+              success: function (data) {
+                if (data.is_valid) {
+                  window.location.href = '{% url "dashboard" %}';
+                } else {
+                  $(".error").text(data.error_message);
+                }
+              },
+              error: function () {
+                $(".error").text("Error occurred while validating");
+              },
+            });
+          });
+        });
+      </script>
+    
+    
+    {%endblock%}
+  </body>
+</html>

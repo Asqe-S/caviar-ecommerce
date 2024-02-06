@@ -1,0 +1,180 @@
+{%extends 'admin/dashboard.html'%} {%block title%} Coupons {%endblock%} 
+{% block bodycontent%}
+
+<div
+  class="modal fade"
+  id="addCoupons"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addCouponsLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Address</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="error"></div>
+        <form id="addCouponsForm" action="" method="post">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="code">Coupon Code</label>
+            <input name="code" type="text" id="code" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="from">Valid from</label>
+            <input name="from" type="date" id="from" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="expirydate">Expiry date</label>
+            <input
+              name="expirydate"
+              type="date"
+              id="expirydate"
+              class="form-control"
+            />
+          </div>
+
+          <!-- <div class="mb-3 border_bottom">
+            <label for="usagelimit">Usage limit</label>
+            <input
+              name="usagelimit"
+              type="number"
+              id="usagelimit"
+              class="form-control"
+              min="1"
+              value="1"
+            />
+          </div> -->
+          <div class="mb-3 border_bottom">
+            <label for="percentage">Offer in percentage </label>
+            <input
+              name="percentage"
+              type="number"
+              id="percentage"
+              class="form-control"
+              min="1"
+              placeholder="eg: 3%  or 5%"
+            />
+          </div>
+          <h4><b>OR</b></h4>
+          <div class="mb-3 border_bottom">
+            <label for="amount">Offer in rupees </label>
+            <input
+              name="amount"
+              type="number"
+              id="amount"
+              class="form-control"
+              min="1"
+              placeholder="eg: 200 or 500 "
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="purchase">Minimum purchase amount </label>
+            <input
+              name="purchase"
+              type="number"
+              id="purchase"
+              class="form-control"
+              min="1"
+              placeholder="eg: 200 or 500 "
+            />
+          </div>
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-2 text-center"><button class="button" data-bs-toggle="modal" data-bs-target="#addCoupons">
+  Add new coupon
+</button></div>
+<br>
+
+{%for i in coupon %}
+
+<div class="bg d-inline-block p-2 rounded-3 m-2">
+  <p>Coupon code: {{i.couponcode}}</p>
+  {% if off%}
+  <p>Offer percentage: {{i.off}}%</p>
+  {%else%}
+  <p>Offer amount: {{i.amount}}</p>
+  {%endif%}
+  <p>valid from {{i.validfrom}} to {{i.expirydate}}</p>
+  <p>Minimum purchase amount: {{i.minimumorderamount}}</p>
+  <div class="m-1 text-center">
+    <button data-coupon-id="{{ i.id }}" class="button delete-coupon">
+      delete
+    </button>
+  </div>
+</div>
+{%endfor%} {%endblock%} {%block script%}
+<script>
+  // for edit profile
+  $(document).ready(function () {
+    $("#addCouponsForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "coupons" %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error").text(data.error_message);
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+
+  // delete
+  $(document).ready(function () {
+    $(".delete-coupon").click(function () {
+      var couponId = $(this).data("coupon-id");
+      $.ajax({
+        type: "GET", // or "POST" depending on your implementation
+        url: '{% url "deletecoupons" %}',
+        data: { coupon_id: couponId },
+        success: function (data) {
+          if (data.success) {
+            location.reload();
+          }
+        },
+        error: function (error) {
+          alert("oops");
+        },
+      });
+    });
+  });
+</script>
+{%endblock%}

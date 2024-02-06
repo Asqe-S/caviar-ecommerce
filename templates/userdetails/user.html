@@ -1,0 +1,61 @@
+
+{%extends 'admin/dashboard.html'%} {%block title%} Product view {%endblock%} 
+{% block bodycontent%}
+
+{%load static%}
+
+<div
+  class="row row-gap-4 justify-content-center row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6"
+>
+  {%for i in user %}
+  <div class="col d-flex justify-content-center">
+    <div class="box_shadow profile_box p-3 text-center">
+      {%if i.image%}
+      <img class="img-fluid mb-2 profile_image" src="{{i.image.url}}" alt="avatar" class="profile_image" />
+      {%else%}
+      <img class="img-fluid mb-2 profile_image" src="{% static 'image/ava3.webp' %}">
+      {%endif%}
+      <h4>{{i.username}}</h4>
+      <p>{{i.email}}</p>
+      <p class="mb-2">{{i.phone_number}}</p>
+      {%if i.status%}
+      <button data-user-id="{{ i.id }}" class="button change-status-button">
+        active
+      </button>
+      {%else%}
+      <button data-user-id="{{ i.id }}" class="button text-danger change-status-button">
+        blocked
+      </button>
+      {%endif%}
+    </div>
+  </div>
+  {%endfor%}
+</div>
+
+{%endblock%} 
+
+{%block script%}
+<script>
+  $(document).ready(function () {
+    $(".change-status-button").click(function () {
+      var userId = $(this).data("user-id");
+      var url = '{% url "blockusers" 0 %}'.replace("0", userId);
+
+      $.ajax({
+        url: url,
+        type: "GET", // or "POST" depending on your implementation
+        success: function (data) {
+          if (data.success) {
+            // Reload the page or update the UI as needed
+            location.reload(); // Reloads the page to reflect the updated status
+          }
+        },
+        error: function (error) {
+          console.log("Error:", error);
+        },
+      });
+    });
+  });
+</script>
+
+{%endblock%}

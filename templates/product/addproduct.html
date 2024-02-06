@@ -1,0 +1,610 @@
+{%extends 'admin/dashboard.html'%} {%block title%} Products {%endblock%} 
+{% block bodycontent%}
+
+<div class="text-center">
+  <button
+    class="button mb-3"
+    data-bs-toggle="modal"
+    data-bs-target="#addProducts"
+  >
+    Add Products
+  </button>
+</div>
+
+<!-- add product model -->
+
+<div
+  class="modal fade"
+  id="addProducts"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addProductsLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Products</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="ms-2 error"></div>
+      <div class="modal-body pt-1">
+        <form method="post" id="addProductsForm" enctype="multipart/form-data">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="name">Name</label>
+            <input required name="name" type="text" id="name" class="form-control" />
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="brand">Brands</label>
+            <select class="form-control" name="brand" id="brand">
+              {%for i in brands%}
+              <option value="{{i.id}}">{{i.name}}</option>
+              {%endfor%}
+            </select>
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="gender">For:</label>
+            <select required class="form-control" name="gender" id="gender">
+              <option disabled selected>----</option>
+              {%for i in gender%}
+              <option value="{{i.id}}">{{i.name}}</option>
+              {%endfor%}
+            </select>
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="category">Category</label>
+            <select required class="form-control" name="category" id="category">
+              <option value="" disabled selected>----</option>
+            </select>
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="subcategory">Sub Category</label>
+            <select required class="form-control" name="subcategory" id="subcategory">
+              <option value="" disabled selected>----</option>
+            </select>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="costoftheproduct">cost of the product</label>
+            <input required
+              name="costoftheproduct"
+              type="text"
+              id="costoftheproduct"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="sellingprice">selling price</label>
+            <input required
+              name="sellingprice"
+              type="text"
+              id="sellingprice"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="discountprice">discount price</label>
+            <input required
+              name="discountprice"
+              type="text"
+              id="discountprice"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label class="mb-2" for="image">Image</label>
+            <input required
+              name="image"
+              type="file"
+              id="image"
+              class="form-control"
+              accept=".jpg,.svg, .jpeg, .png, .gif,.webp"
+            />
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label class="mb-2" for="multipleimage">Multiple Images</label>
+            <input required
+              name="multipleimage"
+              type="file"
+              id="multipleimage"
+              class="form-control"
+              accept=".jpg,.svg, .jpeg, .png, .gif,.webp"
+              multiple
+            />
+          </div>
+
+          <div class="mb-3 text-center">
+            <input required class="button" type="submit" value="Add Product" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- add varient model -->
+
+
+<div
+  class="modal fade"
+  id="addVarient"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addVarientLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Size Varient</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="ms-2 addVarient error"></div>
+      <div class="modal-body pt-1">
+        <form method="post" id="addVarientForm" enctype="multipart/form-data">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="size">Size</label>
+            <select class="form-control" name="size" id="size">
+              {%for i in size%}
+              <option value="{{i.id}}">{{i.size}}</option>
+              {%endfor%}
+            </select>
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="quantity">Quantity</label>
+            <input
+              name="quantity"
+              type="number"
+              id="quantity"
+              class="form-control"
+              min="1"
+              value="1"
+            />
+          </div>
+          
+          
+          
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Add Varient" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- edit varient model -->
+
+<div
+  class="modal fade"
+  id="editVarient"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="editVarientLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Edit Varient</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="ms-2 edit error"></div>
+      <div class="modal-body pt-1">
+        <form method="post" id="editVarientForm" enctype="multipart/form-data">
+          {%csrf_token%}
+
+          <div class="mb-3 border_bottom">
+            <label for="equantity">Quantity</label>
+            <input
+              name="equantity"
+              type="text"
+              id="equantity"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save changes" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- main body part -->
+
+<div class="row row-gap-3 justify-content-center">
+  {% for i in product %}
+  <div class="col-11 p-0">
+    <div class="effect rounded-2">
+
+      <div class="row row-gap-3  p-1">
+       
+      <div class="col-4 col-sm-3 col-md-2 text-center">
+        <img
+          class="img-fluid product_imgage p-1"
+          src="{{i.image.url}}"
+          alt=""
+        />
+      </div>
+      <div class="col-12 col-sm-9 col-md-10">
+        <div class="m-1 text-uppercase text_small">
+          <p>name: {{i.name}}</p>
+          <p>brand: {{i.brand}}</p>
+          <p>costoftheproduct: {{i.costoftheproduct}}</p>
+          <p>sellingprice: {{i.sellingprice}}</p>
+          <p>discountprice: {{i.discountprice}}</p>
+        </div>
+        <div class="">
+          {%if i.active%}
+          <button data-product-id="{{ i.id }}" class="button change-status-button">
+            active
+          </button>
+          {%else%}
+          <button data-product-id="{{ i.id }}" class="button text-danger change-status-button">
+            blocked
+          </button>
+          {%endif%}
+
+          <a class="button" href="{% url 'editproducts' i.id %}">Edit Product</a>
+          <button
+              class="button mb-3 add-variant-button"
+              data-bs-toggle="modal"
+              data-bs-target="#addVarient"
+              data-product-id="{{ i.id }}"
+            >
+              Add Size Varient
+            </button>                
+        </div>
+        
+
+        <div class="d-inline-block p-2">
+          <table class=" table table-striped ">
+            <thead>
+              <tr>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for variant in i.productvarient_set.all %}
+              
+              <tr>
+                {%if variant.quantity == 0 %} 
+                <td class="text-danger">{{ variant.size }}</td>
+                <td class="text-danger">{{ variant.quantity }}</td>
+                <td ><button
+                  class="button mb-3 edit-variant-button text-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editVarient"
+                  data-varient-id="{{ variant.id }}"
+                >
+                  Edit Varient
+                </button></td>
+                {%else%}
+                <td>{{ variant.size }}</td>
+                <td>{{ variant.quantity }}</td>
+                <td><button
+                  class="button mb-3 edit-variant-button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editVarient"
+                  data-varient-id="{{ variant.id }}"
+                >
+                  Edit Varient
+                </button></td>
+                {%endif%}
+              </tr>
+             
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        
+      </div>
+      
+      
+
+    </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+
+{%endblock%} {%block script%}
+<script>
+  // get cat by gender
+  $(document).ready(function () {
+    $("#gender").change(function () {
+      var selectedGenderId = $(this).val();
+
+      $.ajax({
+        url: '{% url "getcategory" %}',
+        data: { gender_id: selectedGenderId },
+        dataType: "json",
+        success: function (data) {
+          var categorySelect = $("#category");
+
+          categorySelect.empty();
+
+          $.each(data.categories, function (key, value) {
+            categorySelect.append(
+              $("<option>").text(value.name).attr("value", value.id)
+            );
+          });
+        },
+      });
+    });
+  });
+
+
+
+    // get subcat by cat
+    $(document).ready(function () {
+    $("#category").change(function () {
+      var selectedCategoryId = $(this).val();
+      $.ajax({
+        url: '{% url "getsubcategory" %}',
+        data: { category_id: selectedCategoryId },
+        dataType: "json",
+        success: function (data) {
+          var subCategorySelect = $("#subcategory");
+
+          subCategorySelect.empty();
+
+          $.each(data.categories, function (key, value) {
+            subCategorySelect.append(
+              $("<option>").text(value.name).attr("value", value.id)
+            );
+          });
+        },
+      });
+    });
+  });
+
+// add prroduct
+  $(document).ready(function () {
+    $("#addProductsForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "addproduct" %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error_message").text(data.message);
+            setTimeout(function () {
+              $("#addProductsForm").modal("hide");
+            }, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error").text(data.message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+
+
+
+
+
+    // add varrient
+
+    $(document).ready(function () {
+    var productId;
+
+    $(".add-variant-button").on("click", function () {
+      productId = $(this).data("product-id");
+    });
+
+    $("#addVarientForm").on("submit", function (event) {
+      event.preventDefault();
+
+      // Create a new FormData object
+      var formData = new FormData(this);
+
+      // Append the productId to the FormData object
+      formData.append("productId", productId);
+
+      // Append the CSRF token to the FormData object
+      formData.append(
+        "csrfmiddlewaretoken",
+        $("input[name=csrfmiddlewaretoken]").val()
+      );
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "addvarient" %}',
+        data: formData,
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".addVarient").text(data.error_message);
+           
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".addVarient").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error_message").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+
+
+
+
+  // <!-- edit varient -->
+
+  $(document).ready(function () {
+    var brandId; // Define addressId in a broader scope
+
+    $(".edit-variant-button").on("click", function () {
+      varientId = $(this).data("varient-id"); // Set the addressId when the button is clicked
+      console.log(varientId);
+      // Rest of your code...
+      $.ajax({
+        type: "GET",
+        url: '{% url "editvarient" 0 %}'.replace("0", varientId), // Replace with your URL
+        success: function (data) {
+          if (data.is_valid) {
+            $("#equantity").val(data.varient.quantity);
+            $("#ecostoftheproduct").val(data.varient.costoftheproduct);
+            $("#esellingprice").val(data.varient.sellingprice);
+            $("#ediscountprice").val(data.varient.discountprice);
+          }
+        },
+      });
+    });
+
+    $("#editVarientForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "editvarient" 0 %}'.replace("0", varientId),
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          if (data.is_valid) {
+            $(".edit").text(data.error_message);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".edit").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".edit").text("Error occurred while editing");
+        },
+      });
+    });
+  });
+
+
+  
+// list product
+
+$(document).ready(function () {
+    $(".change-status-button").click(function () {
+      var productId = $(this).data("product-id");
+
+      $.ajax({
+        url: '{% url "blockproduct" %}',
+        data: { productId: productId },
+        dataType: "json",
+        success: function (data) {
+          if (data.success) {
+            // Reload the page or update the UI as needed
+            location.reload(); // Reloads the page to reflect the updated status
+          }
+        },
+        error: function (error) {
+          console.log("Error:", error);
+        },
+      });
+    });
+  });
+
+
+
+
+
+
+// EDIT PRODUCT
+
+
+
+
+
+
+
+</script>
+
+{%endblock%}

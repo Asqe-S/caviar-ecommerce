@@ -1,0 +1,83 @@
+{% extends 'security/index.html'%} {%block title %}User Sign
+Up{%endblock%} {%block content%}
+<div class="error"></div>
+<form method="post" id="signupForm">
+  {%csrf_token%}
+  <div class="mb-3 border_bottom">
+    <label for="username">Username</label>
+    <input name="username" type="text" id="username" class="form-control" />
+  </div>
+  <div class="mb-3 border_bottom">
+    <label for="email">Email</label>
+    <input name="email" type="text" id="email" class="form-control" />
+  </div>
+  <div class="mb-3 border_bottom">
+    <label for="phonenumber">Phone Number</label>
+    <input
+      name="phonenumber"
+      type="text"
+      id="phonenumber"
+      class="form-control"
+    />
+  </div>
+  <div class="mb-3 border_bottom">
+    <label for="password">Password</label>
+    <input name="password" type="password" id="password" class="form-control" />
+  </div>
+  <div class="mb-3 border_bottom">
+    <label for="confirmpassword">Confirm Password</label>
+    <input
+      name="confirmpassword"
+      type="password"
+      id="confirmpassword"
+      class="form-control"
+    />
+  </div>
+  
+  <div class="mb-3 text-center">
+    <input class="button" type="submit" value="Sign Up" />
+  </div>
+</form>
+<div class="mb-1 text_md">
+  Already have an Account?.
+  <a class="link_text" href="{% url 'signin' %}">Sign In</a>
+</div>
+
+{%endblock%} {%block script%}
+<script>
+  $(document).ready(function () {
+    $("#signupForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var username = $("#username").val();
+      var email = $("#email").val();
+      var phonenumber = $("#phonenumber").val();
+      var password = $("#password").val();
+      var confirmpassword = $("#confirmpassword").val();
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "signup" %}', // Replace with your URL for form validation
+        data: {
+          username: username,
+          email: email,
+          phonenumber: phonenumber,
+          password: password,
+          confirmpassword: confirmpassword, 
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        },
+        success: function (data) {
+          if (data.is_valid) {
+            window.location.href = '{% url "otp" %}';
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+</script>
+{%endblock%}

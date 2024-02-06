@@ -1,0 +1,382 @@
+{%extends 'shop/shop.html'%} {%block title%}Caviar Offers {%endblock%}
+ {% block bodycontent%}
+
+<div class="text-center">
+  <!-- head banner -->
+  <div
+    id="carouselExampleAutoplayingBanner"
+    class="carousel carousel-dark slide mb-3"
+    data-bs-ride="carousel"
+  >
+    <div class="m-0 p-0 carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#carouselExampleAutoplayingBanner"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleAutoplayingBanner"
+        data-bs-slide-to="1"
+        aria-label="Slide 2"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleAutoplayingBanner"
+        data-bs-slide-to="2"
+        aria-label="Slide 3"
+      ></button
+      ><button
+        type="button"
+        data-bs-target="#carouselExampleAutoplayingBanner"
+        data-bs-slide-to="3"
+        aria-label="Slide 4"
+      ></button
+      ><button
+        type="button"
+        data-bs-target="#carouselExampleAutoplayingBanner"
+        data-bs-slide-to="4"
+        aria-label="Slide 5"
+      ></button
+      ><button
+        type="button"
+        data-bs-target="#carouselExampleAutoplayingBanner"
+        data-bs-slide-to="5"
+        aria-label="Slide 6"
+      ></button
+      ><button
+        type="button"
+        data-bs-target="#carouselExampleAutoplayingBanner"
+        data-bs-slide-to="6"
+        aria-label="Slide 7"
+      ></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active" data-bs-interval="4000">
+        <img
+          src="https://mobilecdn.6thstreet.com/AllBanners/bmt/08-08-2023+men/hugo+hero+revised/hugo-en-web-.gif"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img
+          src="https://mobilecdn.6thstreet.com/AllBanners/bmt/02-08-2023+men/aero+hero/web_EN.jpg"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img
+          src="https://mobilecdn.6thstreet.com/AllBanners/bmt/08-08-2023+men/ADDIAS+BANNER_MEN/ADIDAS-WEB-EN.gif"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img
+          src=" https://mobilecdn.6thstreet.com/AllBanners/bmt/28-7-23+NEW/Regular-hero/BTS+EN+web.jpg"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img
+          src="https://mobilecdn.6thstreet.com/AllBanners/bmt/3-8-23+NEW/puma+refresh/PUMA-WEB-EN.jpg"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img
+          src="https://mobilecdn.6thstreet.com/AllBanners/bmt/30-07-2023-women/ALDO/ALDO--WEB-EN.gif"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+      <div class="carousel-item" data-bs-interval="2000">
+        <img
+          src="https://mobilecdn.6thstreet.com/AllBanners/bmt/02-08-2023-women/BHPC_hero/BHPC+-WEB-EN.jpg"
+          class="d-block w-100"
+          alt="..."
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-2 text-center text-capitalize">
+    {% for i in gender %}
+    <a class="button m-1" href="{% url 'shop' 'gender' i.name %}">{{i.name}}</a>
+
+    {% endfor %}
+  </div>
+  <!-- middle new arrivals -->
+  <p class="text-center fs-3 fw-semibold">New Arrivals</p>
+  <div
+    class="row row-gap-3 row-cols-2 row-cols-sm-4 mx-1 mb-3 row-cols-md-4 row-cols-lg-4 mt-2 d-flex justify-content-center"
+  >
+    <div class="col">
+      <div
+        id="carouselExampleAutoplaying"
+        class="carousel carousel-dark slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/96/f2/96f25f564ccc08145f7c8a828544ca6adb6c55ea.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/f8/43/f8436c661f7ad5995753eb77e2a32a4743c0d872.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/db/13/db135ca0030a80c192392cc6921b27873be00a40.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+        </div>
+        <div
+          class="carousel-control-prev slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying"
+          data-bs-slide="prev"
+        ></div>
+        <div
+          class="carousel-control-next slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying"
+          data-bs-slide="next"
+        ></div>
+      </div>
+    </div>
+    <div class="col">
+      <div
+        id="carouselExampleAutoplaying2"
+        class="carousel carousel-dark slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/14/d5/14d5300901b0ceedafd000697ba98e193c0237b6.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/8f/93/8f93f77effe427f60a51e1b7a0ab9e6ffd1a9b82.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/f2/41/f2415463dfeef3d726df72de533f918d694cf174.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[2]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+        </div>
+        <div
+          class="carousel-control-prev slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying2"
+          data-bs-slide="prev"
+        ></div>
+        <div
+          class="carousel-control-next slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying2"
+          data-bs-slide="next"
+        ></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div
+        id="carouselExampleAutoplaying3"
+        class="carousel carousel-dark slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/63/1e/631e5075e13938cea40195eb5b680a7ee6d68276.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/3a/70/3a7055a6c2d96b75992d04c7d2ceba893dcca133.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              class="d-block w-100 rounded-2"
+              src="https://lp2.hm.com/hmgoepprod?set=source[/d0/3e/d03ebb6668e19c405d7b60d35db3fc46c0b080f1.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/9f/9e/9f9e33cfe78d979024a9b0e274a0a3515f982ea5.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+        </div>
+        <div
+          class="carousel-control-prev slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying3"
+          data-bs-slide="prev"
+        ></div>
+        <div
+          class="carousel-control-next slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying3"
+          data-bs-slide="next"
+        ></div>
+      </div>
+    </div>
+    <div class="col">
+      <div
+        id="carouselExampleAutoplaying4"
+        class="carousel carousel-dark slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/e2/19/e2191045d2f61493128772cc8a1e1d50633ca911.jpg],origin[dam],category[kids_boys_clothing_trousersjeans_trousers],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/bb/86/bb868cebbf4470e58b078d64ddc6f81f16bd238d.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              class="d-block w-100 rounded-2"
+              src="https://lp2.hm.com/hmgoepprod?set=source[/89/9a/899addb7e7472c58cb1aaa1f73751c0f2539aed0.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="https://lp2.hm.com/hmgoepprod?set=source[/9f/9e/9f9e33cfe78d979024a9b0e274a0a3515f982ea5.jpg],origin[dam],category[],type[LOOKBOOK],res[z],hmver[1]&call=url[file:/product/main]"
+              class="d-block w-100 rounded-2"
+              alt="..."
+            />
+          </div>
+        </div>
+        <div
+          class="carousel-control-prev slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying4"
+          data-bs-slide="prev"
+        ></div>
+        <div
+          class="carousel-control-next slide"
+          type="button"
+          data-bs-target="#carouselExampleAutoplaying4"
+          data-bs-slide="next"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- offers -->
+
+  <p class="fs-3 text-capitalize fw-semibold text-center">top offers</p>
+  <div
+    class="row row-gap-2 mb-3 mx-1 row-cols-3 row-cols-md-4 justify-content-center"
+  >
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-UHP-D-TopBrands-pumaadidas-min50.jpg"
+        class="img-fluid w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-UHP-D-TopBrands-nikecrocs-upto50.jpg"
+        class="img-fluid w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-UHP-D-Bestsellers-wardrobesuperheroes-upto60.jpg"
+        class="img-fluid w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-UHP-D-Superstarbrands-aldo-upto50.jpg"
+        class="img-fluid w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-UHP-D-Superstarbrands-brooksbrothers-upto50.jpg"
+        class="img-fluid w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-UHP-D-Superstarbrands-nike-upto50.jpg"
+        class="img-fluid w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-UHP-D-Kidswear-Hailysadidaskids-min30.jpg"
+        class="img-fluid w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-MHP-D-HotRightNow-tommyhilfiger-3050.jpg"
+        class="img-fluid h-100 w-100"
+        alt=""
+      />
+    </div>
+    <div class="col">
+      <img
+        src="https://assets.ajio.com/cms/AJIO/WEB/01072023-MHP-D-MostHeartedBrands-superdry-3050.jpg"
+        class="img-fluid h-100 w-100"
+        alt=""
+      />
+    </div>
+  </div>
+</div>
+
+{%endblock%}

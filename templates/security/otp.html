@@ -1,0 +1,52 @@
+{% extends 'security/index.html'%}{%block title %}OTP {%endblock%}
+{%block content%}
+<div class="error">check email for OTP</div>
+<form method="post" id="otpForm">
+  {%csrf_token%}
+
+  <div class="mb-3 border_bottom">
+    <label for="otp">OTP </label>
+    <input name="otp" type="text" id="otp" class="form-control" />
+  </div>
+
+  <div class="mb-3 text-center">
+    <input class="button" type="submit" value="Verify" />
+  </div>
+</form>
+<!-- <div class="mb-1 text-md">
+  <a class="link_text" href="{% url 'signin' %}">Resend Otp</a>
+</div> -->
+
+{%endblock%} {%block script%}
+<script>
+  $(document).ready(function () {
+    $("#otpForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var otp = $("#otp").val();
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "otp" %}', // Replace with your URL for form validation
+        data: {
+          otp: otp,
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        },
+        success: function (data) {
+          if (data.is_valid === true) {
+            window.location.href = '{% url "signin" %}';
+          } else if (data.is_valid === "recovery") {
+            window.location.href = '{% url "forgotpassword" %}';
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+</script>
+{%endblock%}

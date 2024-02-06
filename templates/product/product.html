@@ -1,0 +1,274 @@
+{%extends 'shop/shop.html'%} {%block title%} Product View {%endblock%} 
+{% block bodycontent%}
+
+<div class="row mb-3 mx-2 row-gap-3">
+  <div class="col-12 col-md-7 col-xl-6 col-xxl-5">
+    <div class="row row-cols-5 row-gap-3 justify-content-center">
+      <div id="imageContainer" class="col-12 text-center overflow-hidden">
+        <div class="w-50 d-inline-block">
+          <img
+            id="mainImage"
+            class="img-fluid zoomable-image"
+            src="{{multipleimage.0.multipleimages.url}}"
+            alt=""
+          />
+        </div>
+      </div>
+      {%for i in multipleimage%}
+      <div class="col">
+        <img
+          onclick="changeimage(this.src)"
+          class="img-fluid"
+          src="{{i.multipleimages.url}}"
+          alt=""
+        />
+      </div>
+      {%endfor%}
+    </div>
+  </div>
+  <div class="col-12 col-md-5 col-xl-6 col-xxl-7">
+    <p class="error"></p>
+    <p>{{products.name}}</p>
+    <p>{{products.brand}}</p>
+    <p class="text-danger"><strike>{{products.sellingprice}}</strike></p>
+    <p class="text-success">{{products.discountprice}}</p>
+    <p class="text-danger">{{products.off}}% OFF</p>
+
+
+    <form class="mb-3"  id="addToCart" action="" method="post">
+      {%csrf_token%}
+       {% for i in varient %}
+  <div class="mb-3">
+    <input required type="radio" {%if i.quantity < 1 %}    disabled
+    {% endif %} name="size" id="{{i.size.size}}" value="{{i.id}}" >
+    <label for="{{i.size.size}}">{{i.size.size}} 
+      <br>
+      {%if i.quantity < 1 %}
+      out of stock
+      {% elif i.quantity < 10 %}
+      only {{i.quantity}} left hurry
+      {%else%}
+      limited perriod offer
+      {%endif%}
+    </label>
+  </div>
+
+      {% endfor %}
+      
+      <label for="quantity">Quantity</label>
+      <div class="mb-3">
+        <div class="d-inline-block">
+          <select required id="quantity" name="quantity" class="px-4">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      {% if request.user.is_authenticated %}
+      <input class="button" type="submit" value="Add to cart" />
+      {%else%}
+<a href="{% url 'signin' %}"> signin to add item to the bag</a>
+      {%endif%}
+    </form>
+
+
+    <ul class="text_small">
+      <li>Size: XS: Width: 1.07 m, Length: 69 cm</li>
+      <li>Size: S: Width: 1.15 m, Length: 71 cm</li>
+      <li>Size: M: Width: 1.23 m, Length: 73 cm</li>
+      <li>Size: L: Width: 1.31 m, Length: 75 cm</li>
+      <li>Size: XL: Width: 1.39 m, Length: 76 cm</li>
+      <li>Size: XXL: Width: 1.47 m, Length: 77 cm</li>
+    </ul>
+    
+
+
+
+
+  </div>
+</div>
+<hr>
+{%if  related%}
+<div class="text-center text-uppercase text-decoration-underline"><h3>related product</h3></div> 
+
+<div class="mb-3 justify-content-center row  row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5 row-gap-3 p-0 ">
+  {% for i in related%}
+      
+    <div class="col p-0">
+          <div class="m-1 p-1 rounded-2 effect">
+            <div class=" mb-1">
+                <img class="img-fluid product_imgage" src="{{i.image.url}}" alt="">
+            </div>
+            <div class=" d-flex justify-content-between mx-2 mb-1">
+                <button class="addtowhishlist" data-product-id="{{i.id}}">
+                  <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              {% for j in request.user.customuser.wishlist_set.all%}
+              {%if j.product.id == i.id%}
+              class="product_svg product_svg_red" 
+               {%endif%}
+              {%endfor%}
+              class="product_svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+              />
+            </svg>
+                </button>
+                <a class="link_text" href="{% url 'product' i.id %}">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              {% for j in request.user.customuser.cart_set.all%}
+          {%if j.product.product.id == i.id%}
+          class="product_svg product_svg_red" 
+           {%endif%}
+          {%endfor%}
+              class="product_svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+              />
+            </svg>
+          </a>
+            </div>
+            <div class="m-1">
+               <a class="link_text" href="{% url 'product' i.id %}">{{i.name}}</a>
+               <p>{{i.brand}}</p>
+               <p class="text-danger"><strike>{{i.sellingprice}}</strike></p>
+               <p class="text-success">{{i.discountprice}}</p>
+               <p class="text-danger">{{i.off}}% OFF</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+  </div>
+
+{%endif%}
+
+{% if review%}
+<h4>Reviews:</h4>
+<div class="row row-cols-1 row-cols-md-2 row-gap-3">
+  {%for i in review%}
+<div class="col">
+  <div class="bg p-2 rounded-2">
+    <p class="text-uppercase mb-1"><u> {{i.user}} </u></p>
+  <p>{{i.review}}</p>
+  </div>
+</div>
+{%endfor%}
+  
+</div>
+
+{%endif%}
+
+{%endblock%} {%block script%}
+<script>
+  // for image
+  $(document).ready(function () {
+    var imageContainer = $("#imageContainer");
+    var mainImage = $("#mainImage");
+
+    imageContainer.on("mousemove", function (event) {
+      var containerRect = imageContainer[0].getBoundingClientRect();
+      var mouseX = event.clientX - containerRect.left;
+      var mouseY = event.clientY - containerRect.top;
+
+      var percentX = mouseX / containerRect.width;
+      var percentY = mouseY / containerRect.height;
+
+      mainImage.css(
+        "transform-origin",
+        percentX * 100 + "% " + percentY * 100 + "%"
+      );
+      mainImage.addClass("zoomed");
+    });
+
+    imageContainer.on("mouseleave", function () {
+      mainImage.css("transform-origin", "center center"); // Reset the origin point
+      mainImage.removeClass("zoomed");
+    });
+  });
+  function changeimage(a) {
+    $("#mainImage").attr("src", a);
+  }
+
+  // add to cart
+
+  $(document).ready(function () {
+    $("#addToCart").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "addtocart"  %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error").text(data.error_message);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+        window.location.href = '{% url "signin" %}';
+
+          $(".error").text("product out of stock");
+        },
+      });
+    });
+  });
+
+
+  // add to whishlist
+
+     
+
+  $(".addtowhishlist").click(function () {
+    var productId = $(this).data("product-id");
+
+    $.ajax({
+      url: "{% url 'addtowishlist'%}",
+      dataType: "json",
+
+      data: {
+        product_id: productId,
+      },
+
+      success: function (data) {
+        if (data.is_valid) {
+          location.reload();
+
+        } else {
+          location.reload();
+
+        }
+      },
+      error: function () {
+        window.location.href = '{% url "signin" %}';
+      },
+    });
+  });
+</script>
+
+{%endblock%}

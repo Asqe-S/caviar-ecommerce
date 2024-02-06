@@ -1,0 +1,718 @@
+
+{%extends 'shop/shop.html'%} {%block title%} User Details {%endblock%} 
+{% block bodycontent%}
+{% load static %}
+
+
+<div class="">
+    <div class="d-flex justify-content-center text-center">
+        <div class="profile_box">
+            {% if user.image %}
+            <img  class="profile_image mb-2 img-fluid" src="{{ user.image.url }}" />
+            
+            {% else %}
+            <img class="img-fluid mb-2 profile_image" src="{% static 'image/ava3.webp' %}">
+            {% endif %}
+          
+            <h4>{{user.username}}</h4>
+            <p>{{user.email}}</p>
+            <p>{{user.phone_number}}</p>
+          
+            <p>wallet balance :{{user.wallet}}</p>
+            <button data-bs-toggle="modal" data-bs-target="#editProfile">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="product_svg"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                />
+              </svg>
+            </button>
+          </div>
+    </div>
+    <div class="text-center">
+        <button data-bs-toggle="modal" data-bs-target="#changePassword">
+            Change Password
+          </button>
+          <a class="ms-3" href="{% url 'signout' %}">Sign Out</a>
+          
+    </div>
+</div>
+
+
+<button class="button" data-bs-toggle="modal" data-bs-target="#addAddress">
+    Add Address
+  </button>
+<br>
+
+{%if address%}
+<h3>saved address</h3>
+
+{%endif%}
+  {%for i in address%}
+
+  <div class="box box_shadow text-uppercase">
+    <h5>{{i.name}} {{i.type_of_address}}</h5>
+    <p>
+      {{i.phone_number}}, {{i.alternate_phone_number}}
+      <br />{{i.house}}<br />{{i.road}}<br />
+      {{i.pincode}} {{i.city}} {{i.state}}
+    </p>
+    <div class="text-center mt-3">
+      <a class="me-2 delete-address-btn" data-address-id="{{ i.id }}"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="product_svg"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+          />
+        </svg>
+      </a>
+      <button
+        class="edit-address-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#editAddress"
+        data-address-id="{{ i.id }}"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="product_svg"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  {%endfor%}
+
+
+
+
+
+
+
+
+<!-- edit profile -->
+
+<div
+  class="modal fade"
+  id="editProfile"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="editProfileLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Edit Profile</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="details error"></div>
+        <form method="post" id="editProfileForm" enctype="multipart/form-data">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="username">Username</label>
+            <input
+              name="username"
+              type="text"
+              id="username"
+              class="form-control"
+              value="{{user.username}}"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="email">Email</label>
+            <input
+              name="email"
+              type="text"
+              id="email"
+              class="form-control"
+              value="{{user.email}}"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="phonenumber">Phone Number</label>
+            <input
+              name="phonenumber"
+              type="text"
+              id="phonenumber"
+              class="form-control"
+              value="{{user.phone_number}}"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label class="mb-3" for="image">Profile Image</label>
+            <input name="image" type="file" id="image" class="form-control" />
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save Changes" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- change password -->
+
+
+<div
+  class="modal fade"
+  id="changePassword"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="changePasswordLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Change Password</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="pass error"></div>
+        <form
+          method="post"
+          id="changePasswordForm"
+          enctype="multipart/form-data"
+        >
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="password">Password</label>
+            <input
+              name="password"
+              type="password"
+              id="password"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="confirmpassword">Confirm Password</label>
+            <input
+              name="confirmpassword"
+              type="password"
+              id="confirmpassword"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save Changes" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- add addess -->
+<div
+  class="modal fade"
+  id="addAddress"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addAddressLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Address</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="addaddress error"></div>
+        <form method="post" id="addAddressForm">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="name">Name</label>
+            <input name="name" type="text" id="name" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="typeofaddress">Type Of Address</label>
+            <input
+              name="typeofaddress"
+              type="text"
+              id="typeofaddress"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="phone_number">Phone number</label>
+            <input
+              name="phonenumber"
+              type="text"
+              id="phone_number"
+              class="form-control"
+            />
+          </div>
+          <label
+            for="alternatephonenumber"
+            class="mb-2"
+            data-bs-toggle="collapse"
+            data-bs-target="#addalternatephonenumber"
+            aria-expanded="false"
+            aria-controls="addalternatephonenumber"
+            >Alternate phone Number
+            <span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                class="product_svg"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                /></svg></span
+          ></label>
+          <div class="mb-3 border_bottom collapse" id="addalternatephonenumber">
+            <input
+              name="alternatephonenumber"
+              type="text"
+              id="alternatephonenumber"
+              class="form-control"
+            />
+            <div></div>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="pincode">Pincode </label>
+            <input
+              name="pincode"
+              type="text"
+              id="pincode"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="city">City</label>
+            <input name="city" type="text" id="city" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="state">State</label>
+            <input name="state" type="text" id="state" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="houseaddress">House No, Near by Address</label>
+            <textarea name="houseaddress" id="houseaddress" rows="2"></textarea>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="roadname">Road name, Nearby Address</label>
+            <textarea name="roadname" id="roadname" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Add Address" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- edit address  -->
+<div
+  class="modal fade"
+  id="editAddress"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="editAddressLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Edit Address</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="editaddress error"></div>
+        <form method="post" id="editAddressForm">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="editname">Name</label>
+            <input
+              name="editname"
+              type="text"
+              id="editname"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="edittypeofaddress">Type Of Address</label>
+            <input
+              name="edittypeofaddress"
+              type="text"
+              id="edittypeofaddress"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="editphone_number">Phone number</label>
+            <input
+              name="editphonenumber"
+              type="text"
+              id="editphone_number"
+              class="form-control"
+            />
+          </div>
+          <label
+            for="editalternatephonenumber"
+            class="mb-2"
+            data-bs-toggle="collapse"
+            data-bs-target="#editalternatephonenumber1"
+            aria-expanded="false"
+            aria-controls="editalternatephonenumber1"
+            >Alternate phone Number
+            <span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                class="product_svg"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                /></svg></span
+          ></label>
+          <div
+            class="mb-3 border_bottom collapse"
+            id="editalternatephonenumber1"
+          >
+            <input
+              name="editalternatephonenumber"
+              type="text"
+              id="editalternatephonenumber"
+              class="form-control"
+            />
+            <div></div>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="editpincode">Pincode </label>
+            <input
+              name="editpincode"
+              type="text"
+              id="editpincode"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="editcity">City</label>
+            <input
+              name="editcity"
+              type="text"
+              id="editcity"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="editstate">State</label>
+            <input
+              name="editstate"
+              type="text"
+              id="editstate"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="edithouseaddress">House No, Near by Address</label>
+            <textarea
+              name="edithouseaddress"
+              id="edithouseaddress"
+              rows="2"
+            ></textarea>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="editroadname">Road name, Nearby Address</label>
+            <textarea name="editroadname" id="editroadname" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save Changes" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{%endblock%}
+
+
+
+{%block script%}
+<script>
+  // for edit profile
+  $(document).ready(function () {
+    $("#editProfileForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "edituser" user.id %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".details").text(data.error_message);
+            setTimeout(function () {
+              $("#editProfile").modal("hide");
+            }, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".details").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".details").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+
+  // for change password
+
+  $(document).ready(function () {
+    $("#changePasswordForm").on("submit", function (event) {
+      event.preventDefault();
+
+      // var password = $("#password").val();
+      // var confirmPassword = $("#confirmpassword").val();
+
+      // if (password !== confirmPassword) {
+      //   $(".error_message").text("Passwords do not match.");
+      //   return;
+      // }
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "changepassword" user.id %}',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          if (data.is_valid) {
+            $(".pass").text(data.cperror_message);
+            setTimeout(function () {
+              $("#changePassword").modal("hide");
+            }, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".pass").text(data.cperror_message);
+          }
+        },
+        error: function () {
+          $(".pass").text("Error occurred while changing password.");
+        },
+      });
+    });
+  });
+
+
+
+  
+  $(document).ready(function () {
+    $("#addAddressForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "addaddress" %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error_message").text(data.error_message);
+            setTimeout(function () {
+              $("#addAddressForm").modal("hide");
+            }, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error_message").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error_message").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+
+  $(document).ready(function () {
+    $(".delete-address-btn").on("click", function () {
+      var addressId = $(this).data("address-id");
+
+      $.ajax({
+        type: "GET",
+        url: '{% url "deleteaddress" 0 %}'.replace("0", addressId), // Replace with your URL
+        success: function (data) {
+          if (data.is_valid) {
+            location.reload();
+          }
+        },
+      });
+    });
+  });
+
+  $(document).ready(function () {
+    var addressId; // Define addressId in a broader scope
+
+    $(".edit-address-btn").on("click", function () {
+      addressId = $(this).data("address-id"); // Set the addressId when the button is clicked
+
+      // Rest of your code...
+      $.ajax({
+        type: "GET",
+        url: '{% url "getaddress" 0 %}'.replace("0", addressId), // Replace with your URL
+        success: function (data) {
+          if (data.is_valid) {
+            // Populate the edit address form with the retrieved data
+            $("#editname").val(data.address.name);
+            $("#edittypeofaddress").val(data.address.type_of_address);
+            $("#editphone_number").val(data.address.phone_number);
+            $("#editalternatephonenumber").val(
+              data.address.alternate_phone_number
+            );
+            $("#editpincode").val(data.address.pincode);
+            $("#editcity").val(data.address.city);
+            $("#editstate").val(data.address.state);
+            $("#edithouseaddress").val(data.address.house);
+            $("#editroadname").val(data.address.road);
+
+            $("#editAddress").modal("show");
+          }
+        },
+      });
+    });
+
+    $("#editAddressForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "editaddress" 0 %}'.replace("0", addressId),
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          if (data.is_valid) {
+            $(".editerror_message").text(data.error_message);
+            setTimeout(function () {
+              $("#editAddress").modal("hide");
+            }, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".editerror_message").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".editerror_message").text("Error occurred while editing");
+        },
+      });
+    });
+  });
+</script>
+{%endblock%}

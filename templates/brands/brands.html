@@ -1,0 +1,307 @@
+{%extends 'admin/dashboard.html'%}  {%block title%} Brands {%endblock%} 
+{% block bodycontent%}
+
+
+<button class="button mb-3" data-bs-toggle="modal" data-bs-target="#addBrands">
+    Add Brands
+  </button>
+
+
+
+  <!-- add brands -->
+
+  <div
+  class="modal fade"
+  id="addBrands"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addBrandsLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Brands</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="error"></div>
+        <form method="post" id="addBrandsForm" enctype="multipart/form-data">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="name">Name</label>
+            <input required name="name" type="text" id="name" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label class="mb-2" for="image">Image</label>
+            <input required
+              name="image"
+              type="file"
+              id="image"
+              class="form-control"
+              accept=".jpg,.svg, .jpeg, .png, .gif"
+            />
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="description">Description</label>
+            <textarea required name="description" id="description" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Add Brands" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- edit brands -->
+
+<div
+  class="modal fade"
+  id="editBrands"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="editBrandsLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Edit Brands</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="edit error"></div>
+        <form method="post" id="editBrandsForm" enctype="multipart/form-data">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="editname">Name</label>
+            <input
+              name="editname"
+              type="text"
+              id="editname"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label class="mb-2" for="editimage">Image</label>
+
+            <input
+              name="editimage"
+              type="file"
+              id="editimage"
+              class="form-control"
+            />
+            <br /><a class="text-truncate form-text text-danger " id="editimageurl" href=""></a>
+          </div>
+
+          <div class="mb-3 border_bottom">
+            <label for="editdescription">Description</label>
+            <textarea
+              name="editdescription"
+              id="editdescription"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save Changes" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- main body -->
+<div class="row mx-1 row-gap-3 row-cols-1 row-cols-md-2 row-cols-xl-3">
+    {%for i in brands%}
+    <div class="col">
+      <div class="box_shadow col_box text-center p-3">
+        {%if i.image%}
+
+        <img
+        src="{{i.image.url}}"
+        class="small_img img-fluid mb-2 box_shadow p-1"
+      />
+        {%endif%}
+  
+        <h4 class="text-uppercase">{{i.name}}</h4>
+        <p class="text-start mb-2">{{i.description}}</p>
+  
+        {%if i.status%}
+        <button data-brand-id="{{ i.id }}" class="button change-status-button">
+          active
+        </button>
+        {%else%}
+        <button data-brand-id="{{ i.id }}" class="button change-status-button text-danger">
+          blocked
+        </button>
+        {%endif%}
+        <button
+          class="button edit-brand-btn"
+          data-bs-toggle="modal"
+          data-bs-target="#editBrands"
+          data-brand-id="{{i.id}}"
+        >
+          Edit
+        </button>
+      </div>
+    </div>
+    {%endfor%}
+  </div>
+
+
+
+{%endblock%} 
+
+
+{%block script%}
+
+<script>
+  // add
+  $(document).ready(function () {
+    $("#addBrandsForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "brands"  %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error_message").text(data.error_message);
+            setTimeout(function () {
+              $("#addBrands").modal("hide");
+            }, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+
+
+  
+  // edit 
+
+  $(document).ready(function () {
+  var brandId; // Define addressId in a broader scope
+
+  $(".edit-brand-btn").on("click", function () {
+    brandId = $(this).data("brand-id"); // Set the addressId when the button is clicked
+
+    // Rest of your code...
+    $.ajax({
+      type: "GET",
+      url: '{% url "getbrands" 0 %}'.replace("0", brandId), // Replace with your URL
+      success: function (data) {
+        if (data.is_valid) {
+          $("#editname").val(data.brand.name);
+          $("#editimageurl")
+            .attr("href", data.brand.image)
+            .text(data.brand.image);
+          $("#editdescription").val(data.brand.description);
+        }
+      },
+    });
+  });
+
+  $("#editBrandsForm").on("submit", function (event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+
+    $.ajax({
+      type: "POST",
+      url: '{% url "getbrands" 0 %}'.replace("0", brandId),
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (data) {
+        if (data.is_valid) {
+          $(".edit").text(data.error_message);
+
+          setTimeout(function () {
+            location.reload();
+          }, 1000);
+        } else {
+          $(".edit").text(data.error_message);
+        }
+      },
+      error: function () {
+        $(".editerror_message").text("Error occurred while editing");
+      },
+    });
+  });
+});
+
+
+// block
+$(document).ready(function () {
+    $(".change-status-button").click(function () {
+      var brandId = $(this).data("brand-id");
+      var url = '{% url "blockbrands" 0 %}'.replace("0", brandId);
+
+      $.ajax({
+        url: url,
+        type: "GET", // or "POST" depending on your implementation
+        success: function (data) {
+          if (data.success) {
+            // Reload the page or update the UI as needed
+            location.reload(); // Reloads the page to reflect the updated status
+          }
+        },
+        error: function (error) {
+          console.log("Error:", error);
+        },
+      });
+    });
+  });
+
+</script>
+
+{%endblock%}

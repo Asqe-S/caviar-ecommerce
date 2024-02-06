@@ -1,0 +1,223 @@
+{%extends 'admin/dashboard.html'%} {%block title%} Categories {%endblock%} 
+{% block bodycontent%}
+
+
+<button class="button" data-bs-toggle="modal" data-bs-target="#addCategory">
+    Add Category
+  </button>
+
+  <button class="button" data-bs-toggle="modal" data-bs-target="#addSubCategory">
+    Add Sub category
+  </button>
+
+<!-- add category -->
+<div
+  class="modal fade"
+  id="addCategory"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addCategoryLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Category</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="error"></div>
+        <form method="post" id="addCategoryForm">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="gender">For:</label>
+            <select required class="form-control" name="gender" id="gender">
+              {%for gender in genders %}
+              <option value="{{gender.id}}">{{gender}}</option>
+              {%endfor%}
+            </select>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="category">category</label>
+            <input
+            required
+              name="category"
+              type="text"
+              id="category"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save Changes" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- add sub category -->
+
+
+<div
+  class="modal fade"
+  id="addSubCategory"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addSubCategoryLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Subcategory</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="error_message"></div>
+        <form method="post" id="addSubCategoryForm">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="category">For:</label>
+            <select required class="form-control" name="category" id="category">
+              {%for gender in genders %} {%for j in gender.category_set.all%}
+              <option value="{{j.id}}">{{j}}</option>
+              {%endfor%} {%endfor%}
+            </select>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="subcategory">sub category</label>
+            <input required
+              name="subcategory"
+              type="text"
+              id="subcategory"
+              class="form-control"
+            />
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Save Changes" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- main body -->
+<div class="row mt-3 mx-1 row-gap-3 row-cols-2">
+    {% for gender in genders %}
+    <div class="col">
+      <div class="effect p-3 m-1">
+        <h1>{{ gender.name }}</h1>
+        {% for category in gender.category_set.all %}
+       
+        <h3 class="ms-3"> {{ category.name }}</h3>
+        {% for subcategory in category.subcategory_set.all %}
+        <p class="ms-5">{{ subcategory.name }}</p>
+        {% endfor %} {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+{%endblock%} 
+
+{%block script%}
+<script>
+
+  $(document).ready(function () {
+    $("#addCategoryForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "category"  %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error").text(data.error_message);
+            setTimeout(function () {}, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+
+
+
+  $(document).ready(function () {
+    $("#addSubCategoryForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "subcategory"  %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error").text(data.error_message);
+            setTimeout(function () {}, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+</script>
+{%endblock%}

@@ -1,0 +1,185 @@
+{%extends 'shop/shop.html'%} {%block title%} Cart {%endblock%} 
+{% block bodycontent%} {% if items %}
+
+<div
+  class="row m-1 mb-3 justify-content-center row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 row-gap-3 p-0"
+>
+  {%for i in items%} {%if i.product.quantity > 0 %}
+
+  <div class="col overflow-hidden p-0">
+    <div class="m-1 p-1 rounded-2 effect">
+      <img
+        class="img-fluid mb-1"
+        src="{{i.product.product.image.url}}"
+        alt=""
+      />
+      <div class="d-flex justify-content-between mx-2 mb-1">
+        <div class="">
+          <button class="me-2 remove" data-cartitem-id="{{i.id}}">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              class="product_svg"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="d-flex">
+          <button class="count" data-item-id="{{i.id}}" data-count-qty="-1">
+            {% if i.quantity > 1 %}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              class="product_svg"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"
+              /></svg
+            >{%endif%}
+          </button>
+
+          <p class="mx-2">{{i.quantity}}</p>
+          {% if i.quantity < i.product.quantity %}
+          <button class="count" data-item-id="{{i.id}}" data-count-qty="1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              class="product_svg"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+              />
+            </svg></button
+          >{%endif%}
+        </div>
+      </div>
+      <div class="p-1">
+        <p class="text-break text_md">{{i.product.product.name}}</p>
+        <p>{{i.product.size}}</p>
+
+        <p class="text-success">₹ {{i.product.product.discountprice}}</p>
+        <p class="text-danger">₹ {{i.total}}</p>
+      </div>
+    </div>
+  </div>
+  {%else%}
+  <div class="col overflow-hidden p-0">
+    <div class="m-1 p-1 rounded-2 effect text-danger">
+      <img
+        class="img-fluid mb-1"
+        src="{{i.product.product.image.url}}"
+        alt=""
+      />
+      <div class="mb-1">
+        <button class="me-2 remove" data-cartitem-id="{{i.id}}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="product_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="p-1">
+        <p class="text-break text_md">{{i.product.product.name}}</p>
+
+        <p>out of stock</p>
+      </div>
+    </div>
+  </div>
+
+  {%endif%} {%endfor%}
+</div>
+
+<!-- for coupons -->
+<!-- <div class="d-flex justify-content-center mb-3">
+  <div class="box_shadow p-3 text-center">
+<form action="" method="post">  
+  <div class="mb-3">
+    <input placeholder="enter coupon details" type="text">
+  </div>
+  <input class="button" type="submit" value="Apply">
+</form>
+  </div>
+</div> -->
+
+{% if outofstock %}
+<div class="text-center">
+  <h2 class="text-danger">please remove item that in out of stock to countinue... </h2>
+</div>
+{%else%}
+<div class="d-flex justify-content-center">
+    <div class="box_shadow p-3 text-center">
+      <p class="mb-3">total for ( <b>{{totalitems}}</b> ) </span>  items : <span class="text-danger">{{grandtotal}}</span>  </p>
+      <a class="button" href="{% url 'checkout' %}">proceed to checkout</a>
+    </div>
+  </div>
+{%endif%}
+
+
+
+{% else %}
+
+<div class="text-center">
+  <h4>Your Shopping Bag is empty!</h4>
+<p>add items to the bag <a class="link_text" href="{% url 'offers'%}">shop</a></p>
+</div>
+{% endif %} {%endblock%} {%block script%}
+<script>
+  $(".remove").click(function () {
+    var cartItemId = $(this).data("cartitem-id");
+
+    $.ajax({
+      url: "{% url 'removefromcart'%}",
+      dataType: "json",
+
+      data: {
+        cartitem_id: cartItemId,
+      },
+
+      success: function (data) {
+        if (data.is_valid) {
+          location.reload();
+        }
+      },
+      error: function () {
+        alert("you have to login fo adding items ");
+      },
+    });
+  });
+
+  $(".count").click(function () {
+    var count = $(this).data("count-qty");
+    var id = $(this).data("item-id");
+
+    $.ajax({
+      url: "{% url 'addcartquantity' %}",
+      dataType: "json",
+      data: {
+        count_val: count,
+        id: id,
+      },
+      success: function (data) {
+        if (data.is_valid) {
+          location.reload();
+        }
+      },
+      error: function () {
+        alert("You have to login to add items.");
+      },
+    });
+  });
+</script>
+
+{%endblock%}

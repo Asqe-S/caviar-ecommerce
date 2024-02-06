@@ -1,0 +1,200 @@
+{%extends 'shop/shop.html'%} {%block title%}Edit Product {%endblock%} {% block bodycontent%}
+
+
+<div class="row justify-content-center">
+  <div class="col-10 col-md-8 col-xl-6 col-xxl-5">
+    <div class="p-2 box_shadow">
+      <form method="post" id="editProductForm" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="mb-3 border_bottom">
+          <label for="editname">Name</label>
+          <input
+            name="editname"
+            type="text"
+            id="editname"
+            class="form-control"
+            value="{{product.name}}"
+          />
+        </div>
+
+        <div class="mb-3 border_bottom">
+          <label for="editdescription">Description</label>
+          <textarea name="editdescription" id="editdescription" rows="2">
+{{product.description}}</textarea
+          >
+        </div>
+
+        <div class="mb-3 border_bottom">
+          <label for="editbrand">Brands</label>
+          <select required class="form-control" name="editbrand" id="editbrand">
+            {%if product.brand%}
+            <option value="{{product.brand.id}}">{{product.brand.name}}</option>
+            {%endif%} {%for i in brands%}
+            <option value="{{i.id}}">{{i.name}}</option>
+            {%endfor%}
+          </select>
+        </div>
+
+        <div class="mb-3 border_bottom">
+          <label for="editgender">For:</label>
+          <select required class="form-control" name="editgender" id="editgender">
+            {%if product.gender%}
+            <option value="{{product.gender.id}}">
+              {{product.gender.name}}
+            </option>
+            {%endif%} {%for i in gender%}
+            <option value="{{i.id}}">{{i.name}}</option>
+            {%endfor%}
+          </select>
+        </div>
+
+        <div class="mb-3 border_bottom">
+          <label for="editcategory">Category</label>
+          <select required class="form-control" name="editcategory" id="editcategory">
+            {%if product.category%}
+            <option value="{{product.category.id}}">
+              {{product.category.name}}
+            </option>
+            {%endif%} {%for i in category%}
+            <option value="{{i.id}}">{{i.name}}</option>
+            {%endfor%}
+          </select>
+        </div>
+
+        <div class="mb-3 border_bottom">
+          <label for="editsubcategory">Sub Category</label>
+          <select required
+            class="form-control"
+            name="editsubcategory"
+            id="editsubcategory"
+          >
+            {%if product.subcategory%}
+            <option value="{{product.subcategory.id}}">
+              {{product.subcategory.name}}
+            </option>
+            {%endif%} {%for i in subcategory%}
+            <option value="{{i.id}}">{{i.name}}</option>
+            {%endfor%}
+          </select>
+        </div>
+        <div class="mb-3 border_bottom">
+          <label for="costoftheproduct">cost of the product</label>
+          <input
+            required
+            name="costoftheproduct"
+            type="text"
+            id="costoftheproduct"
+            class="form-control"
+            value="{{product.costoftheproduct}}"
+          />
+        </div>
+        <div class="mb-3 border_bottom">
+          <label for="sellingprice">selling price</label>
+          <input
+            required
+            name="sellingprice"
+            type="text"
+            id="sellingprice"
+            class="form-control"
+            value="{{product.sellingprice}}"
+          />
+        </div>
+        <div class="mb-3 border_bottom">
+          <label for="discountprice">discount price</label>
+          <input
+            required
+            name="discountprice"
+            type="text"
+            id="discountprice"
+            class="form-control"
+            value="{{product.discountprice}}"
+
+          />
+        </div>
+
+        <div class="mb-3 border_bottom">
+          <label class="mb-2" for="editimage">Image</label>
+          <input
+            name="editimage"
+            type="file"
+            id="editimage"
+            class="form-control"
+            accept=".jpg,.svg, .jpeg, .png, .gif,.webp"
+          />
+          <br />
+        </div>
+
+        <div class="mb-3 border_bottom">
+          <label class="mb-2" for="editmultipleimage">Multiple Images</label>
+          <input
+            name="editmultipleimage"
+            type="file"
+            id="editmultipleimage"
+            class="form-control"
+            accept=".jpg,.svg, .jpeg, .png, .gif,.webp"
+            multiple
+          />
+          <br />
+        </div>
+
+        <div class="mb-3 text-center">
+          <input class="button" type="submit" value="Save Changes" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{%endblock%}
+
+{%block script%}
+<script>
+  // cat
+    $(document).ready(function () {
+    $("#editgender").change(function () {
+      var selectedGenderId = $(this).val();
+
+      $.ajax({
+        url: '{% url "getcategory" %}',
+        data: { gender_id: selectedGenderId },
+        dataType: "json",
+        success: function (data) {
+          var categorySelect = $("#editcategory");
+
+          categorySelect.empty();
+
+          $.each(data.categories, function (key, value) {
+            categorySelect.append(
+              $("<option>").text(value.name).attr("value", value.id)
+            );
+          });
+        },
+      });
+    });
+  });
+
+    // get subcat by cat
+    $(document).ready(function () {
+    $("#editcategory").change(function () {
+      var selectedCategoryId = $(this).val();
+      $.ajax({
+        url: '{% url "getsubcategory" %}',
+        data: { category_id: selectedCategoryId },
+        dataType: "json",
+        success: function (data) {
+          var subCategorySelect = $("#editsubcategory");
+
+          subCategorySelect.empty();
+
+          $.each(data.categories, function (key, value) {
+            subCategorySelect.append(
+              $("<option>").text(value.name).attr("value", value.id)
+            );
+          });
+        },
+      });
+    });
+  });
+
+
+</script>
+{%endblock%}

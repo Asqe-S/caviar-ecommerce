@@ -1,0 +1,59 @@
+{%extends 'shop/shop.html'%} {%block title%} Order Success {%endblock%} 
+{% block bodycontent%}
+
+<style>
+    .beat-fade {
+      font-size: 24px;
+      text-align: center;
+      animation: beatFade 3s 2;
+      transition: opacity 0.2s ease-in-out;
+    }
+  
+    @keyframes beatFade {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.9;
+      }
+    }
+  </style>
+  <div class="text-center">
+    <div class="beat-fade">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        x="0px"
+        y="0px"
+        width="150"
+        height="150"
+        viewBox="0 0 48 48"
+      >
+        <path
+          fill="rgba(86, 146, 68, 0.8)"
+          d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"
+        ></path>
+        <path
+          class="tick"
+          d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"
+        ></path>
+      </svg>
+    </div>
+    <h1>order successfull</h1>
+  </div>
+  
+  
+  <h4 class="text-center" ><a class="button" href="{% url 'offers' %}">countinue shopping >>></a></h4>
+  
+
+
+
+
+
+
+
+
+
+{%endblock%} 

@@ -1,0 +1,18 @@
+{%extends 'admin/dashboard.html'%} {%block title%} Orders {%endblock%} 
+{% block bodycontent%}
+
+<div class="text-center">
+    
+    {%for i in items%}
+    <div class="effect d-inline-block mx-2 mb-3 text-center py-2 px-4 rounded-5 ">
+    
+    <p class="mb-2">orderby {{i.user.username}}
+       at {{i.created}},
+         {%if i.order_total == 0 %} <span class="text-danger">order cancelled</span>{%else%}total  {{i.order_total}}{%endif%}</p>
+    <a class="button mb-1" href="{%url 'ordersdetails' i.id%}">view order details</a>
+    </div>
+    {%endfor%}
+    </div>
+
+
+{%endblock%} 

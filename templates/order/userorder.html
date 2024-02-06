@@ -1,0 +1,414 @@
+{%extends 'shop/shop.html'%} {%block title%} Order Details {%endblock%} 
+{% block bodycontent%}
+
+<!-- for cancel -->
+
+<div
+  class="modal fade"
+  id="cancelConfimation"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="cancelConfimationLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="cancelConfimationLabel">
+          Confimation
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="cancelConfimationForm" method="post">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="reason">Reson for Cancellation</label>
+            <input
+              class="form-control"
+              required
+              type="text"
+              name="reason"
+              id="reason"
+            />
+          </div>
+
+          <div class="">
+            <p class="button" data-bs-dismiss="modal">cancel</p>
+            <input class="button bg-danger" type="submit" value="Confirm" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- for return -->
+
+<div
+  class="modal fade"
+  id="returnConfirmation"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="returnConfirmationLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="returnConfirmationLabel">
+          Confimation
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="returnConfirmationForm" method="post">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="reason">Reason for return</label>
+            <input
+              class="form-control"
+              required
+              type="text"
+              name="reason"
+              id="reason"
+            />
+          </div>
+
+          <div class="">
+            <p class="button" data-bs-dismiss="modal">cancel</p>
+            <input class="button bg-danger" type="submit" value="Return" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- for review -->
+<div
+  class="modal fade"
+  id="review"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="reviewLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="reviewLabel">Review</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="reviewForm" method="post">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <input
+              class="form-control"
+              required
+              type="text"
+              name="review"
+              id="review"
+            />
+          </div>
+
+          <div class="">
+            <p class="button" data-bs-dismiss="modal">cancel</p>
+            <input class="button bg-danger" type="submit" value="Send" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="row mx-1 mb-3 row-gap-2 justify-content-center mx-2 row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 row-gap-3 p-0"
+>
+  {%for i in items%}
+  <div class="col overflow-hidden p-0">
+    <div class="m-1 p-1 rounded-2 effect d-flex">
+      <div class="row row-gap-3 row-cols-2">
+        <div class="col">
+          <img
+            class="img-fluid rounded-5"
+            src="{{i.product.product.image.url}}"
+            alt=""
+            loading="lazy"
+          />
+        </div>
+
+        <div class="col d-flex align-items-center text_md">
+          <div class="w-100">
+            <p class="text-danger">status: {{i.status}}</p>
+
+            <div class="mb-2">
+              <a href="{%url 'product' i.product.product.id%}"
+                ><p class="text-break link_text">
+                  {{i.product.product.name}}
+                </p></a
+              >
+              <p>Qty: {{ i.quantity }}</p>
+              <p>Size: {{i.product.size}}</p>
+              <p>Unit Price: {{ i.unitprice}}</p>
+              <p>Total Price: {{ i.product_price}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 text-center">
+          {%if i.is_cancelled%}
+          <p class="text-danger p-1">Order Cancelled:{{i.reason}}</p>
+          {%elif i.status == 'Delivered' %} {%if i.returndate > today %}
+          <button
+            type="button"
+            class="button mb-2 return-item-button"
+            data-item-id="{{i.id}}"
+            data-bs-toggle="modal"
+            data-bs-target="#returnConfirmation"
+          >
+            return
+          </button>
+
+          {%endif%} {%else%}
+          <button
+            type="button"
+            class="button mb-2 cancel-item-button"
+            data-item-id="{{i.id}}"
+            data-bs-toggle="modal"
+            data-bs-target="#cancelConfimation"
+          >
+            cancel item
+          </button>
+          {%endif%}
+      <div class="text-start p-1">
+        
+        {% if i.status == 'Delivered' %}
+        <h5>Review:</h5>
+        
+        {% if i.review_set.all%}
+        {{i.review_set.first.review}}
+        <button
+          type="button"
+          class="mb-2 write-review"
+          data-item-id="{{i.id}}"
+          data-bs-toggle="modal"
+          data-bs-target="#review"
+        >
+        <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="product_svg"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                />
+              </svg>
+        </button>
+        
+        {%else%}
+        <button
+          type="button"
+          class="button mb-2 write-review"
+          data-item-id="{{i.id}}"
+          data-bs-toggle="modal"
+          data-bs-target="#review"
+        >
+          write a review
+        </button>
+        {%endif%} {%endif%}
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+
+{% if order.order_total > 0 %}
+<div class="text-center">
+  <div class="effect d-inline-block mx-2 mb-3 py-2 px-4 rounded-5">
+    <p>delivey address</p>
+    <p>{{order.address.name}} {{order.address.type_of_address}}</p>
+    <p>
+      {{order.address.phone_number}}, {{order.address.alternate_phone_number}}
+      <br />{{order.address.house}}<br />{{order.address.road}}<br />
+      {{order.address.pincode}} {{order.address.city}} {{order.address.state}}
+    </p>
+  </div>
+  <div
+    class="effect text-start align-top d-inline-block mx-2 mb-3 py-2 px-4 rounded-5"
+  >
+    <p>
+      payment method:<strong class="text-danger"
+        >{{order.payment_method}}</strong
+      >
+    </p>
+    {% if balancetopay == 0 %}
+    <p>payment id: <strong class="text-danger">{{order.payment_id}}</strong></p>
+    {%endif%}
+    <p>
+      amount paid using wallet:
+      <strong class="text-danger">{{order.wallet_amount}} </strong>
+    </p>
+
+    {%if order.deliverycharge > 0 %}
+    <p>
+      delivery charge:
+      <strong class="text-danger">{{order.deliverycharge}}</strong>
+    </p>
+    {%else%}
+    <p>delivery charge: <strong class="text-danger">free delivery</strong></p>
+    {%endif%}
+    <p>
+      balance amount to pay:
+      <strong class="text-danger">{{ balancetopay }}</strong>
+    </p>
+
+    {%if order.payment.amountpaid%}
+
+    <p>transaction id : {{order.payment.paymentid}}</p>
+    {%endif%}
+  </div>
+</div>
+{%endif%} {%endblock%} {%block script%}
+<script>
+  $(document).ready(function () {
+    var itemId;
+
+    // Handle "Cancel Item" button click
+    $(".cancel-item-button").click(function () {
+      itemId = $(this).data("item-id");
+    });
+
+    // Handle form submission
+    $("#cancelConfimationForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      var formData = new FormData(this);
+      formData.append("itemId", itemId);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "cancelorder" %}',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          if (data.is_valid) {
+            location.reload();
+          } else {
+            alert("hu");
+          }
+        },
+        error: function () {
+          alert("hkjhkju");
+        },
+      });
+    });
+  });
+
+  // return
+  $(document).ready(function () {
+    var itemId;
+
+    // Handle "Cancel Item" button click
+    $(".return-item-button").click(function () {
+      itemId = $(this).data("item-id");
+    });
+
+    // Handle form submission
+    $("#returnConfirmationForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      var formData = new FormData(this);
+      formData.append("itemId", itemId);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "returnproduct" %}',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          if (data.is_valid) {
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            alert("oops....");
+          }
+        },
+        error: function () {
+          alert("Task not Done");
+        },
+      });
+    });
+  });
+
+  // for review
+  $(document).ready(function () {
+    var itemId;
+
+    // Handle "Cancel Item" button click
+    $(".write-review").click(function () {
+      itemId = $(this).data("item-id");
+    });
+
+    // Handle form submission
+    $("#reviewForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      formData.append("itemId", itemId);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "review" %}',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+          if (data.is_valid) {
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            alert("oops....");
+          }
+        },
+        error: function () {
+          alert("Task not Done");
+        },
+      });
+    });
+  });
+</script>
+{%endblock%}

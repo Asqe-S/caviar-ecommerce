@@ -1,0 +1,59 @@
+{% extends 'security/index.html'%} {%block title %}User Sign In{%endblock%}
+{%block content%}
+<div class="error"></div>
+<form method="post" id="signinForm">
+  {%csrf_token%}
+  <div class="mb-3 border_bottom">
+    <label for="username">Username or Email</label>
+    <input name="username" type="text" id="username" class="form-control" />
+  </div>
+
+  <div class="mb-2 border_bottom">
+    <label for="password">Password</label>
+    <input name="password" type="password" id="password" class="form-control" />
+  </div>
+  <p class="mb-1 text-end">
+    <a class="link_text" href="{% url 'femail' %}">forgot password?. </a>
+  </p>
+
+  <div class="mb-3 text-center">
+    <input class="button" type="submit" value="Sign Up" />
+  </div>
+</form>
+<div class="mb-1 text_md">
+  Don't have an Account?.
+  <a class="link_text" href="{% url 'signup' %}">Create</a>
+</div>
+
+{%endblock%} {%block script%}
+<script>
+  $(document).ready(function () {
+    $("#signinForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var username = $("#username").val();
+      var password = $("#password").val();
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "signin" %}', // Replace with your URL for form validation
+        data: {
+          username: username,
+          password: password,
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        },
+        success: function (data) {
+          if (data.is_valid) {
+            window.location.href = '{% url "offers" %}';
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+</script>
+{%endblock%}

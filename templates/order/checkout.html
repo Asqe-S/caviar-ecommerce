@@ -1,0 +1,236 @@
+{%extends 'shop/shop.html'%} {%block title%} Order Checkout {%endblock%} 
+{% block bodycontent%}
+
+
+<!-- add address -->
+<div
+  class="modal fade"
+  id="addAddress"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="addAddressLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content box_shadow">
+      <div class="modal-header">
+        <p>Add Address</p>
+        <p data-bs-dismiss="modal" aria-label="Close">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="menu_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </p>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="error"></div>
+        <form method="post" id="addAddressForm">
+          {%csrf_token%}
+          <div class="mb-3 border_bottom">
+            <label for="name">Name</label>
+            <input name="name" type="text" id="name" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="typeofaddress">Type Of Address</label>
+            <input
+              name="typeofaddress"
+              type="text"
+              id="typeofaddress"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="phone_number">Phone number</label>
+            <input
+              name="phonenumber"
+              type="text"
+              id="phone_number"
+              class="form-control"
+            />
+          </div>
+          <label
+            for="alternatephonenumber"
+            class="mb-2"
+            data-bs-toggle="collapse"
+            data-bs-target="#addalternatephonenumber"
+            aria-expanded="false"
+            aria-controls="addalternatephonenumber"
+            >Alternate phone Number
+            <span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                class="product_svg"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                /></svg></span
+          ></label>
+          <div class="mb-3 border_bottom collapse" id="addalternatephonenumber">
+            <input
+              name="alternatephonenumber"
+              type="text"
+              id="alternatephonenumber"
+              class="form-control"
+            />
+            <div></div>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="pincode">Pincode </label>
+            <input
+              name="pincode"
+              type="text"
+              id="pincode"
+              class="form-control"
+            />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="city">City</label>
+            <input name="city" type="text" id="city" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="state">State</label>
+            <input name="state" type="text" id="state" class="form-control" />
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="houseaddress">House No, Near by Address</label>
+            <textarea name="houseaddress" id="houseaddress" rows="2"></textarea>
+          </div>
+          <div class="mb-3 border_bottom">
+            <label for="roadname">Road name, Nearby Address</label>
+            <textarea name="roadname" id="roadname" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3 text-center">
+            <input class="button" type="submit" value="Add Address" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="button" data-bs-toggle="modal" data-bs-target="#addAddress">
+    Add New Address
+  </button>
+
+<form class="text-center" action="" method="post">
+    {%csrf_token%} 
+    {%for i in address%}
+    <div class="effect d-inline-block mx-2 mb-3 py-2 px-4 rounded-2">
+
+      <div class="">
+        <input
+          required
+          type="radio"
+          name="address"
+          id="{{i.id}}"
+          value="{{i.id}}"
+        />
+        <label for="{{i.id}}">
+
+            <h5>{{i.name}} {{i.type_of_address}}</h5>
+            <p>
+              {{i.phone_number}}, {{i.alternate_phone_number}}
+              <br />{{i.house}}<br />{{i.road}}<br />
+              {{i.pincode}} {{i.city}} {{i.state}}
+            </p>
+
+        </label>
+      </div>
+    </div>
+    {%endfor%}
+    <br />
+    <h4 class="mb-3">select payment method</h4>
+
+    <div class="mb-3">
+      <div class="effect d-inline-block rounded-2 p-2 me-2">
+        <input
+          class="p-2"
+          required
+          type="radio"
+          name="paymentmethod"
+          id="cod"
+          value="cod"
+        />
+        <label for="cod">cod</label>
+      </div>
+      <div class="effect d-inline-block rounded-2 p-2">
+        <input
+          class="P-2"
+          required
+          type="radio"
+          name="paymentmethod"
+          id="upi"
+          value="upi"
+        />
+        <label for="upi">upi</label>
+      </div>
+    </div>
+    
+    {%if userwallet > 0 %}
+    <div class="effect d-inline-block rounded-2 p-2 mb-2">
+      <input type="checkbox" name="wallet" id="wallet" value="True" />
+<label for="wallet"
+  ><p class="mb-2">
+    use wallet
+    <strong class="text-danger">{{userwallet}}</strong>
+  </p></label
+>
+    </div>
+    {%endif%}
+    <br>
+
+    <input class="button d-inline-block" type="submit" value="continue" />
+
+  </form>
+
+  {%endblock%} 
+
+
+  {%block script%}
+<script>
+  $(document).ready(function () {
+    $("#addAddressForm").on("submit", function (event) {
+      event.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: '{% url "addaddress" %}',
+        data: formData, // Use FormData object here
+        processData: false, // Prevent jQuery from processing data
+        contentType: false, // Prevent jQuery from setting content type
+        success: function (data) {
+          if (data.is_valid) {
+            $(".error").text(data.error_message);
+            setTimeout(function () {
+              $("#addAddressForm").modal("hide");
+            }, 1000);
+
+            setTimeout(function () {
+              location.reload();
+            }, 1000);
+          } else {
+            $(".error").text(data.error_message);
+          }
+        },
+        error: function () {
+          $(".error").text("Error occurred while validating");
+        },
+      });
+    });
+  });
+</script>
+
+{%endblock%}

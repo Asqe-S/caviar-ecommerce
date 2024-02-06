@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Account Verification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .header {
+        color: #0055a5;
+        font-size: 2rem;
+      }
+      p {
+        margin-bottom: 10px;
+      }
+      strong {
+        color: #ff6600;
+      }
+      .container {
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      {%if recovery%}
+      <p class="header">Caviar Account Passwod Recovery</p>
+      <p>Dear {{username}},</p>
+      <p>Your OTP for passwrod recovery is: <strong>{{ otp }}</strong></p>
+      
+       {%else%}
+      <p class="header">Caviar Account Activation</p>
+      <p>Dear {{username}},</p>
+      <p>Your OTP for Account activation is
+        : <strong>{{ otp }}</strong></p>
+        {%endif%}
+      <p>Don't share this OTP with anyone </p>
+      <p>OTP is only valid for 3 min</p>
+      <p>Thank you!</p>
+    </div>
+  </body>
+</html>

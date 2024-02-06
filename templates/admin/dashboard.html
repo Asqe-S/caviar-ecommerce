@@ -1,0 +1,240 @@
+{%extends 'admin/admin.html'%} {%block title%}Admin Dashboard{%endblock%}
+{%block body%}
+<div class="row justify-content-center">
+  <div
+    class="nav align-items-center justify-content-around nav_bar col-11 col-md-8 col-xl-7"
+  >
+    <a href="{% url 'dashboard' %}" class="logo">Caviar</a>
+
+    <button
+      class=""
+      data-bs-toggle="offcanvas"
+      data-bs-target="#navBar"
+      aria-controls="navBar"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="menu_svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 9h16.5m-16.5 6.75h16.5"
+        />
+      </svg>
+    </button>
+    <!-- nav title -->
+  </div>
+</div>
+
+<div
+  class="offcanvas admin_offcanvas offcanvas-start"
+  tabindex="-1"
+  id="navBar"
+  aria-labelledby="navBarLabel"
+>
+  <div class="offcanvas-header">
+    <a href="{% url 'dashboard' %}" class="logo">Caviar</a>
+    <button
+      class=""
+      type="button"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="menu_svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+  <!-- navbar body -->
+  <div class="offcanvas-body">
+    <ul class="flex-column">
+      <li>
+        <a class="navbar_link" href="{% url 'admindetails'%}">Admin</a>
+      </li>
+      <li>
+        <a class="navbar_link" href="{% url 'dashboard'%}">Dashboard</a>
+      </li>
+      <li>
+        <a class="navbar_link" href="{% url 'users'%}">Users</a>
+      </li>
+      <li><a class="navbar_link" href="{% url 'brands'%}">Brands</a></li>
+      <li><a class="navbar_link" href="{% url 'category'%}">Categories</a></li>
+      <li><a class="navbar_link" href="{% url 'coupons'%}">Coupons</a></li>
+
+      <li><a class="navbar_link" href="{% url 'orders'%}">Orders</a></li>
+
+      <li><a class="navbar_link" href="{% url 'addproduct'%}">Products</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="vh-100 mb-3">
+  {% block bodycontent%}
+  <div class="text-center">
+    <div class="mb-3 text-uppercase">
+      <div class="d-inline-block m-1 bg p-2 rounded-2">
+        <h3>number of sale: {{totalsalecount}}</h3>
+      </div>
+
+      <div class="d-inline-block m-1 bg p-2 rounded-2">
+        <h3>total sale: ₹ {{totalsale}}</h3>
+      </div>
+
+      <div class="d-inline-block m-1 bg p-2 rounded-2">
+        <h3>total profit: ₹ {{profit}}</h3>
+      </div>
+    </div>
+
+    <div class="text-uppercase">
+      <h4>
+        <span>COD: {{cod}}%</span>
+        <span>Online Pay: {{upi}}%</span>
+        <span>Wallet: {{wallet}}%</span>
+      </h4>
+    </div>
+
+    <!-- for pie chart -->
+    <div style="width: 20rem">
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <form
+      id="dateForm"
+      class="bg  d-inline-block p-3"
+      action=""
+      method="post"
+    >
+      {%csrf_token%}
+      <div class="mb-3 border_bottom">
+        <label for="one">pick one date</label>
+        <input class="form-control" required type="date" name="one" id="one" />
+      </div>
+      <input class="button" type="submit" value="Find" />
+    </form>
+
+    <p class="my-3">or choose between</p>
+    <form
+      id="dateForm"
+      class="bg  d-inline-block p-3"
+      action=""
+      method="post"
+    >
+      {%csrf_token%}
+
+      <div class="mb-3 border_bottom">
+        <label for="two">From</label>
+        <input class="form-control" type="date" name="two" id="two" />
+      </div>
+      <div class="mb-3 border_bottom">
+        <label for="three">To</label>
+        <input
+          class="form-control"
+          required
+          type="date"
+          name="three"
+          id="three"
+        />
+      </div>
+      <input required class="button" type="submit" value="Find" />
+    </form>
+
+    <h4 class="mt-3"><u>Detailed Sales Report</u></h4>
+    <div class="text-start text-uppercase mb-2 ms-3">
+      {% if one%}
+      <p>sale report of date {{one}}</p>
+      {%elif two %}
+      <p>sale report of date from {{two}} to {{three}}</p>
+      {%endif%} {%if count%}
+      <p>no.of sales: {{count}}</p>
+      <p>profit: {{profit1}}</p>
+      <p>total sale: {{totalsale1}}</p>
+      {%elif count == 0 %}
+      <p>No data</p>
+      {%endif%}
+    </div>
+
+
+
+    {%if orderitems %}
+    <div class="bg mb-5 p-2 rounded-2 table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>Profit</th>
+            <th>Ordered Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in orderitems%}
+          <tr>
+            <td>{{i.product.product.name}}</td>
+            <td>{{i.quantity}}</td>
+            <td>₹ {{i.unitprice}}</td>
+            <td>₹ {{i.product_price}}</td>
+            <td>₹ {{i.profit}}</td>
+            <td>{{i.created_at}}</td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+    {%endif%}
+  </div>
+
+  {%endblock%}
+</div>
+{%endblock%} {%block script%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+  // Initial data values
+  let codValue = {{cod}} ;
+  let upiValue = {{upi}};
+  let walletValue = {{wallet}};
+
+  // Function to update the pie chart
+  function updatePieChart() {
+      const ctx = document.getElementById('pieChart').getContext('2d');
+      const pieChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+              labels: ['COD', 'UPI', 'Wallet'],
+              datasets: [{
+                  data: [codValue, upiValue, walletValue],
+                  backgroundColor: ['red', 'green', 'yellow'],
+              }]
+          },
+          options: {
+              title: {
+                  display: true,
+                  text: 'Payment Methods Distribution ss'
+              }
+          }
+      });
+  }
+
+  updatePieChart();
+
+
+
+</script>
+{%endblock%}

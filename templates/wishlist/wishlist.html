@@ -1,0 +1,93 @@
+{%extends 'shop/shop.html'%} {%block title%}Wishlist {%endblock%} 
+{%block bodycontent%}
+<div
+  class="row m-1 justify-content-center row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 row-gap-3 p-0"
+>
+  {% for i in products%}
+  <div class="col overflow-hidden p-0">
+    <div class="m-1 p-1 rounded-2 effect">
+      <img class="img-fluid" src="{{i.product.image.url}}" alt="" />
+      <div class="d-flex justify-content-between mx-2">
+        <button class="me-2 remove" data-wishlist-id="{{i.id}}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            class="product_svg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"
+            />
+          </svg>
+        </button>
+        <a href="{%url 'product' i.product.id%}"
+          ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          {% for j in request.user.customuser.cart_set.all%}
+                {%if j.product.product.id == i.product.id%}
+                class="product_svg product_svg_red" 
+                 {%endif%}
+                {%endfor%}
+          class="product_svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+          />
+        </svg>
+            <path
+              d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"
+            ></path></svg
+        ></a>
+      </div>
+      <div class="p-1">
+
+        <a href="{%url 'product' i.product.id%}"
+            ><p class="link_text">{{i.product.name}}</p></a
+          >
+        <p>{{i.product.brand}}</p>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+{%if not products%}
+<div class="text-center">
+  <h4>Your Wishlist is empty!</h4>
+<p>add items to the wishlist <a class="link_text" href="{% url 'offers'%}">shop</a></p>
+</div>
+{%endif%}
+
+{%endblock%} 
+{% block script%}
+
+<script>
+  $(".remove").click(function () {
+    var wishlist_id = $(this).data("wishlist-id");
+
+    $.ajax({
+      url: "{% url 'rmfromwishlist'%}",
+      dataType: "json",
+
+      data: {
+        wishlist_id: wishlist_id,
+      },
+
+      success: function (data) {
+        if (data.is_valid) {
+          location.reload();
+        }
+      },
+      error: function () {
+        alert("you have to login to add items ");
+      },
+    });
+  });
+</script>
+
+{%endblock%}
